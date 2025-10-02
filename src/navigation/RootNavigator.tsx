@@ -27,6 +27,7 @@ const RootNavigator = () => {
       setUser(user);
       if (user) {
         createUserProfile(user).catch(console.error);
+        setupPushNotifications().catch(console.error);
       }
     };
 

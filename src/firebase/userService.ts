@@ -1,5 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
+import { PermissionsAndroid, Platform } from 'react-native';
 
 // Based on 02-ESPECIFICACAO_TECNICA.md
 export interface User {
@@ -12,6 +14,7 @@ export interface User {
   timeBalance: number;
   memberSince: firestore.Timestamp;
   location: firestore.GeoPoint | null;
+  fcmToken?: string; // For push notifications
 }
 
 /**
@@ -39,6 +42,40 @@ export const createUserProfile = async (user: FirebaseAuthTypes.User): Promise<v
   } else {
     console.log(`User profile for ${user.uid} already exists.`);
   }
+};
+
+/**
+ * Requests notification permission and saves the FCM token to the user's profile.
+ */
+export const setupPushNotifications = async (): Promise<void> => {
+  const currentUser = auth().currentUser;
+  if (!currentUser) return;
+
+  if (Platform.OS === 'android') {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
+  }
+
+  const authStatus = await messaging().requestPermission();
+  const enabled = 
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log('FCM Token:', fcmToken);
+      await firestore().collection('users').doc(currentUser.uid).update({ fcmToken });
+    }
+  }
+
+  // Listen for token refreshes
+  messaging().onTokenRefresh(async token => {
+    console.log('New FCM Token:', token);
+    await firestore().collection('users').doc(currentUser.uid).update({ fcmToken: token });
+  });
 };
 
 /**

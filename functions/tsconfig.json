@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",           // mais moderno que es2017, compatível com Node 18
+    "lib": ["es2020"],            // garante recursos modernos do JS
+    "outDir": "lib",
+    "rootDir": "src",             // base para compilação
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,      // facilita importações
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true
+  },
+  "include": ["src"]
+}
