@@ -1,19 +1,8 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import SignInScreen from './src/screens/SignIn/SignInScreen';
+import RootNavigator from './src/navigation/RootNavigator';
 
 function App(): React.JSX.Element {
-  return (
-    <SafeAreaView style={styles.container}>
-      <SignInScreen />
-    </SafeAreaView>
-  );
+  return <RootNavigator />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
