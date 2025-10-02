@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "285764900701",
+    "project_id": "guardia-dd810",
+    "storage_bucket": "guardia-dd810.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285764900701:android:19a60c5946c08af2443ab4",
+        "android_client_info": {
+          "package_name": "com.guardiacliv02"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285764900701-0ms0urjjbt46nupka8ba1jj0n13skjto.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBC6HTh12lOeCDe3c6fdN0S53iW1_K-2nQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285764900701-0ms0urjjbt46nupka8ba1jj0n13skjto.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "285764900701-356ec9fcpcm2l40arqg8gonkccuoab1d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "guardia.apple"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
