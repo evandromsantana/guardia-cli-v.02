@@ -1,20 +1,30 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Button, SafeAreaView, Alert } from 'react-native';
-import Logo from '../components/Logo';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  SafeAreaView,
+  Alert,
+} from 'react-native';
+import Logo from '../components/common/Logo';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 
 const SignInScreen = () => {
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '285764900701-0ms0urjjbt46nupka8ba1jj0n13skjto.apps.googleusercontent.com',
+      webClientId:
+        '285764900701-0ms0urjjbt46nupka8ba1jj0n13skjto.apps.googleusercontent.com',
     });
   }, []);
 
   const onGoogleButtonPress = async () => {
     try {
       // Check if your device supports Google Play
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
       // Get the users ID token
       const { idToken } = await GoogleSignin.signIn();
 
@@ -22,11 +32,15 @@ const SignInScreen = () => {
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
       // Sign-in the user with the credential
-      const userCredential = await auth().signInWithCredential(googleCredential);
-      
-      Alert.alert('Login bem-sucedido!', `Bem-vindo(a), ${userCredential.user.displayName}!`);
-      console.log(userCredential);
+      const userCredential = await auth().signInWithCredential(
+        googleCredential,
+      );
 
+      Alert.alert(
+        'Login bem-sucedido!',
+        `Bem-vindo(a), ${userCredential.user.displayName}!`,
+      );
+      console.log(userCredential);
     } catch (error: any) {
       Alert.alert('Erro no Login', error.message);
       console.error(error);
@@ -38,9 +52,7 @@ const SignInScreen = () => {
       <View style={styles.content}>
         <Logo />
         <Text style={styles.title}>Bem-vinda ao Guardiã</Text>
-        <Text style={styles.subtitle}>
-          Sua segurança em primeiro lugar.
-        </Text>
+        <Text style={styles.subtitle}>Sua segurança em primeiro lugar.</Text>
       </View>
       <View style={styles.footer}>
         <Button

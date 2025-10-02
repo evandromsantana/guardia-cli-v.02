@@ -40,3 +40,37 @@ export const createUserProfile = async (user: FirebaseAuthTypes.User): Promise<v
     console.log(`User profile for ${user.uid} already exists.`);
   }
 };
+
+/**
+ * Fetches the profiles of all accepted guardians for a given user.
+ * @param uid The UID of the user.
+ * @returns A promise that resolves to an array of guardian user profiles.
+ */
+export const getGuardians = async (uid: string): Promise<User[]> => {
+  const guardianshipsRef = firestore()
+    .collection('users')
+    .doc(uid)
+    .collection('guardianships');
+
+  const snapshot = await guardianshipsRef.where('status', '==', 'accepted').get();
+
+  if (snapshot.empty) {
+    return [];
+  }
+
+  // The guardianUid is the ID of the user who is the guardian, not the doc ID of the subcollection
+  const guardianIds = snapshot.docs.map(doc => doc.id);
+
+  // Fetch the profile for each guardian ID
+  const guardianPromises = guardianIds.map(id =>
+    firestore().collection('users').doc(id).get()
+  );
+
+  const guardianDocs = await Promise.all(guardianPromises);
+
+  const guardians = guardianDocs
+    .filter(doc => doc.exists)
+    .map(doc => doc.data() as User);
+
+  return guardians;
+};

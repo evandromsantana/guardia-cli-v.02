@@ -4,10 +4,20 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 import SignInScreen from '../screens/SignInScreen';
-import HomeScreen from '../screens/HomeScreen';
-import { createUserProfile } from '../firebase/userService'; // Import the service
+import AppNavigator from './AppNavigator';
+import StartTripScreen from '../screens/StartTripScreen';
+import TripMonitoringScreen from '../screens/TripMonitoringScreen';
+import { createUserProfile } from '../firebase/userService';
 
-const Stack = createNativeStackNavigator();
+// Define the param list for the root stack
+export type RootStackParamList = {
+  App: undefined;
+  StartTrip: undefined;
+  TripMonitoring: { tripId: string; mode: 'self' | 'monitoring' };
+  SignIn: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const RootNavigator = () => {
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
@@ -16,7 +26,6 @@ const RootNavigator = () => {
     const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
       setUser(user);
       if (user) {
-        // If user is logged in, ensure their profile exists in Firestore
         createUserProfile(user).catch(console.error);
       }
     };
@@ -27,11 +36,33 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator>
         {user ? (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          // Screens for logged-in users
+          <>
+            <Stack.Screen
+              name="App"
+              component={AppNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="StartTrip"
+              component={StartTripScreen}
+              options={{ title: 'Iniciar Novo Trajeto' }}
+            />
+            <Stack.Screen
+              name="TripMonitoring"
+              component={TripMonitoringScreen}
+              options={{ headerShown: false }} // Hide header for a more immersive map view
+            />
+          </>
         ) : (
-          <Stack.Screen name="SignIn" component={SignInScreen} />
+          // Screen for logged-out users
+          <Stack.Screen
+            name="SignIn"
+            component={SignInScreen}
+            options={{ headerShown: false }}
+          />
         )}
       </Stack.Navigator>
     </NavigationContainer>
